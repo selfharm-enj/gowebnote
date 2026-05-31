@@ -1,0 +1,142 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Записка</title>
+</head>
+
+<body>
+    {{ template "header" .}}
+    <main>
+        <div>
+            <input type="button" value="Создать записку" onclick="window.location.href='/notes/create'">
+            <input type="button" value="Редактировать" id="editBtn">
+        </div>
+        <h1>Содержимое заметки</h1>
+        <div class="div-myNote">
+        </div>
+        <script>
+            const id = window.location.pathname.split('/').filter(Boolean).pop()
+            const getNoteEndpoint = "{{ .HttpType }}://localhost:{{ .Port }}/api/v1/notes/" + id
+            const updateNoteEndpoint = "{{ .HttpType }}://localhost:{{ .Port }}/api/v1/notes/"
+            const noteDiv = document.querySelector(".div-myNote");
+            const editBtn = document.getElementById("editBtn");
+
+            let currentNote = null;
+            let isEditing = false;
+
+            async function getNote() {
+                try {
+                    const response = await fetch(getNoteEndpoint);
+                    if (!response.ok) {
+                        alert("Ошибка при получении данных с сервера");
+                        return;
+                    }
+
+                    const data = await response.json();
+                    currentNote = data;
+
+                    renderViewMode();
+                } catch (error) {
+                    console.error(error);
+                    alert("Ошибка при загрузке заметки");
+                }
+            }
+
+            function renderViewMode() {
+                isEditing = false;
+                editBtn.value = "Редактировать";
+
+                noteDiv.innerHTML = `
+            <p class="name">Имя: ${currentNote.name}</p>
+            <p class="text">Текст:<br>${currentNote.text}</p>
+        `;
+            }
+
+            function renderEditMode() {
+                isEditing = true;
+                editBtn.value = "Отмена";
+
+                noteDiv.innerHTML = `
+            <form id="editNoteForm">
+                <div>
+                    <label for="noteName">Имя:</label><br>
+                    <input type="text" id="noteName" name="name" value="${escapeHtml(currentNote.name)}" required>
+                </div>
+                <br>
+                <div>
+                    <label for="noteText">Текст:</label><br>
+                    <textarea id="noteText" name="text" rows="10" cols="50" required>${escapeHtml(currentNote.text)}</textarea>
+                </div>
+                <br>
+                <button type="submit">Сохранить</button>
+            </form>
+        `;
+
+                const form = document.getElementById("editNoteForm");
+                form.addEventListener("submit", updateNote);
+            }
+
+            async function updateNote(event) {
+                event.preventDefault();
+
+                const name = document.getElementById("noteName").value.trim();
+                const text = document.getElementById("noteText").value.trim();
+
+                if (!name || !text) {
+                    alert("Имя и текст не должны быть пустыми");
+                    return;
+                }
+
+                try {
+                    const response = await fetch(updateNoteEndpoint, {
+                        method: "PATCH",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            id: Number(id),
+                            name: name,
+                            text: text
+                        })
+                    });
+
+                    if (!response.ok) {
+                        alert("Ошибка при обновлении заметки");
+                        return;
+                    }
+
+                    window.location.href = "/notes";
+                } catch (error) {
+                    console.error(error);
+                    alert("Ошибка при отправке данных на сервер");
+                }
+            }
+
+            editBtn.addEventListener("click", () => {
+                if (!currentNote) return;
+
+                if (isEditing) {
+                    renderViewMode();
+                } else {
+                    renderEditMode();
+                }
+            });
+
+            function escapeHtml(str) {
+                return String(str)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            getNote();
+        </script>
+    </main>
+    {{ template "footer" .}}
+</body>
+
+</html>

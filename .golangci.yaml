@@ -1,0 +1,58 @@
+version: "2"
+
+run:
+  tests: true
+
+linters:
+  default: none
+
+  enable:
+    - asciicheck
+    - bodyclose
+    - dogsled
+    - dupl
+    - durationcheck
+    - errorlint
+    - exhaustive
+    - funlen
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - godot
+    - goheader
+    - gomoddirectives
+    - gomodguard_v2
+    - goprintffuncname
+    - gosec
+    - govet
+    - importas
+    - ineffassign
+    - lll
+    - makezero
+    - misspell
+    - nestif
+    - nilerr
+    - noctx
+    - nolintlint
+    - predeclared
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - thelper
+    - tparallel
+    - unconvert
+    - unparam
+    - unused
+    - wastedassign
+    - whitespace
+    - copyloopvar
+
+  settings:
+    funlen:
+      lines: 150
+      statements: 80
+
+formatters:
+  enable:
+    - gofmt

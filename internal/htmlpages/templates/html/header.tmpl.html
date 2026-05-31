@@ -1,0 +1,35 @@
+{{define "header"}}
+<header>
+    <a href="{{ .HttpType }}://localhost:{{ .Port }}/">Главная</a>
+    <a href="{{ .HttpType }}://localhost:{{ .Port }}/notes">Записки</a>
+    <a href="{{ .HttpType }}://localhost:{{ .Port }}/register">Регистрация</a>
+    <a href="{{ .HttpType }}://localhost:{{ .Port }}/login">Вход</a>
+    <input type="button" value="Выход" onclick="logOut()">
+</header>
+    <script>
+        const logout = "{{ .HttpType }}://localhost:{{ .Port }}/api/v1/logout"
+        async function logOut() {
+            const cookie = await cookieStore.get("user_id");
+            const req = {"user_id": Number(cookie?.value)}
+            try {
+                const response = await fetch(logout, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(req)
+                });
+                if (!response.ok) {
+                    alert("Ошибка при выходе из сессии");
+                    return
+                }
+                alert("Успешный выход");
+                window.location.href = "/";
+            }
+            catch (error) {
+                alert("Ошибка при выходе из сессии");
+                console.error(error);
+            }
+        }
+    </script>
+{{end}}

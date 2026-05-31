@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes</title>
+</head>
+<body>
+    {{ template "header" .}}
+    <main>
+        <div>
+            <input type="button" value="Создать записку" onclick="window.location.href='/notes/create'">
+        </div>
+        <h1>My Notes</h1>
+        <div class="div-myNotes">
+            <table class="table-notesTable">
+                <tr>
+                    <td>ID</td>
+                    <td>Name</td>
+                    <td>Text</td>
+                    <td>Created At</td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            const endpoint = "{{ .HttpType }}://localhost:{{ .Port }}/api/v1/notes"
+            async function getNotes() {
+                try {
+                    const notesTable = document.querySelector(".table-notesTable");
+                    const response = await fetch(endpoint);
+                    if (!response.ok) {
+                        alert("Ошибка при получении данных с сервера");
+                    }
+                    const data = await response.json();
+                    data.forEach(element => {
+                        let row = notesTable.insertRow(-1);
+                        row.innerHTML = `<td><a href="{{ .HttpType }}://localhost:{{ .Port }}/notes/${element.id}">${element.id}</a></td><td>${element.name}</td><td>${element.text}</td><td>${element.created_at}</td>`
+                    });
+                }
+                catch (error) {
+                    alert("У вас нет заметок");
+                    console.error(error);
+                }
+            }
+            getNotes();
+        </script>
+    </main>
+    {{ template "footer" .}}
+</body>
+</html>

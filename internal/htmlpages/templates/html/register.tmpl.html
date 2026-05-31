@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+</head>
+<body>
+    {{ template "header" . }}
+    <main>
+        <h1>Регистрация</h1>
+        <form id="registerUser">
+                <label for="login">Email</label><br>
+                <input type="email" name="email"><br>
+
+                <label for="pass">Пароль</label><br>
+                <input type="password" name="password" id="pass"><br>
+                <input type="submit" value="Register">
+            </form>
+            <script>
+                const form = document.getElementById('registerUser');
+                const endpoint = "{{ .HttpType }}://localhost:{{ .Port }}/api/v1/register"
+                
+                form.addEventListener('submit', async(event) => {
+                    event.preventDefault();
+
+                    const formData = new FormData(form);
+                    const data = Object.fromEntries(formData);
+
+                    try {
+                        const res = await fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+
+                        const result = await res.json().catch(() => null);
+
+                        if (!res.ok) {
+                            alert("Ошибка регистрации");
+                            return;
+                        }
+                        alert("Успешная регистрация");
+                        window.location.href="/login";
+                    } catch (error) {
+                        alert("Ошибка сети или сервера");
+                    }
+                });
+            </script>
+    </main>
+    {{ template "footer" . }}
+</body>
+</html>

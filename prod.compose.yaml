@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: prod_noteapp_db
+    ports:
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data
+      - ./db/postgres/migrations/0001_20260506142525_init.up.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - prod_noteapp_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d noteapp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    env_file: ./prod.env
+    
+  noteapp:
+    build:
+      context: ./
+      dockerfile: ./prod.Dockerfile
+    container_name: prod_noteapp_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - ${HTTP_PORT}:${HTTP_PORT}
+    networks:
+      - prod_noteapp_network
+    env_file: ./prod.env
+
+networks:
+  prod_noteapp_network:
+    driver: bridge
+
+volumes:
+  db-data:

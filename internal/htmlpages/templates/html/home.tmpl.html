@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    {{template "header" .}}
+    <main>
+        <h1>Приложение заметки</h1>
+        <b><p>Функционал</p></b>
+        <ul>
+            <li>Заметки</li>
+            <ul>
+                <li>Создание заметок</li>
+                <li>Удаление заметок</li>
+                <li>Изменение содержимого заметок</li>
+                <li>Заметки отображаются только владельцу</li>
+            </ul>
+            <li>Пользователь</li>
+            <ul>
+                <li>Создание пользователя</li>
+                <li>Удаление пользователя</li>
+            </ul>
+        </ul>
+        <p></p>
+    </main>
+    {{template "footer" .}}
+</body>
+</html>

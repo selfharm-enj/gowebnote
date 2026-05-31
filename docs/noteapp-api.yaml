@@ -1,0 +1,265 @@
+openapi: 3.0.0
+info:
+  title: noteapp-api
+  version: 1.0.0
+paths:
+  /api/v1/notes:
+    post:
+      summary: CreateNote
+      operationId: >-
+        home_kanade_projects_webnotesapp_docs_bruno_collections_users_createnote_yml
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/createnote'
+      servers:
+        - url: http://localhost:8080
+      security:
+        - userIdCookie: []
+        - sessionTokenCookie: []
+        - csrfTokenCookie: []
+    get:
+      summary: GetMyNotes
+      operationId: >-
+        home_kanade_projects_webnotesapp_docs_bruno_collections_users_getmynotes_yml
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      servers:
+        - url: http://localhost:8080
+      security:
+        - userIdCookie: []
+        - sessionTokenCookie: []
+        - csrfTokenCookie: []
+    patch:
+      summary: UpdateNote
+      operationId: >-
+        home_kanade_projects_webnotesapp_docs_bruno_collections_users_updatenote_yml
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/updatenote'
+      servers:
+        - url: http://localhost:8080
+      security:
+        - userIdCookie: []
+        - sessionTokenCookie: []
+        - csrfTokenCookie: []
+  /api/v1/notes/{id}:
+    delete:
+      summary: DeleteNote
+      operationId: >-
+        home_kanade_projects_webnotesapp_docs_bruno_collections_users_deletenote_yml
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+          example: '5'
+      servers:
+        - url: http://localhost:8080
+      security:
+        - userIdCookie: []
+        - sessionTokenCookie: []
+        - csrfTokenCookie: []
+    get:
+      summary: GetMyNote
+      operationId: >-
+        home_kanade_projects_webnotesapp_docs_bruno_collections_users_getmynote_yml
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+            format: int32
+          example: '5'
+      servers:
+        - url: http://localhost:8080
+      security:
+        - userIdCookie: []
+        - sessionTokenCookie: []
+        - csrfTokenCookie: []
+  /api/v1/login:
+    post:
+      summary: Login
+      operationId: home_kanade_projects_webnotesapp_docs_bruno_collections_users_login_yml
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/login'
+      servers:
+        - url: http://localhost:8080
+  /api/v1/logout:
+    post:
+      summary: Logout
+      operationId: home_kanade_projects_webnotesapp_docs_bruno_collections_users_logout_yml
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/logout'
+      servers:
+        - url: http://localhost:8080
+      security:
+        - userIdCookie: []
+        - sessionTokenCookie: []
+        - csrfTokenCookie: []
+  /api/v1/register:
+    post:
+      summary: Register
+      operationId: >-
+        home_kanade_projects_webnotesapp_docs_bruno_collections_users_register_yml
+      description: ''
+      tags:
+        - ''
+      responses:
+        '200':
+          description: ''
+      requestBody:
+        $ref: '#/components/requestBodies/register'
+      servers:
+        - url: http://localhost:8080
+servers: []
+components:
+  schemas:
+    createnote:
+      type: object
+      properties:
+        name:
+          type: string
+        text:
+          type: string
+      example:
+        name: Test note1
+        text: >-
+          Lorem Ipsum is simply dummy text of the printing and typesetting
+          industry.
+    login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: test@test.loc
+        password: pass
+    logout:
+      type: object
+      properties:
+        user_id:
+          type: integer
+      example:
+        user_id: 4
+    register:
+      type: object
+      properties:
+        password:
+          type: string
+        email:
+          type: string
+      example:
+        password: pass
+        email: test@test.loc
+    updatenote:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        text:
+          type: string
+      example:
+        id: 5
+        name: Updated Test note 1
+        text: >-
+          Another: Lorem Ipsum is simply dummy text of the printing and
+          typesetting industry.
+  requestBodies:
+    createnote:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/createnote'
+      description: ''
+      required: true
+    login:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/login'
+      description: ''
+      required: true
+    logout:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/logout'
+      description: ''
+      required: true
+    register:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/register'
+      description: ''
+      required: true
+    updatenote:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/updatenote'
+      description: ''
+      required: true
+  securitySchemes:
+    userIdCookie:
+      type: apiKey
+      in: cookie
+      name: user_id
+      description: User ID cookie
+    sessionTokenCookie:
+      type: apiKey
+      in: cookie
+      name: session_token
+      description: Session token
+    csrfTokenCookie:
+      type: apiKey
+      in: cookie
+      name: csrf_token
+      description: CSRF token
